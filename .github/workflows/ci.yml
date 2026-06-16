@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: node test.js
+
+  auto-merge:
+    needs: test
+    if: github.event_name == 'pull_request' && github.actor == 'dev2180'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - name: Auto-merge PR
+        run: gh pr merge --auto --squash "${{ github.event.pull_request.number }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
