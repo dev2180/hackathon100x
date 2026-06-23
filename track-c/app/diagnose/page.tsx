@@ -7,6 +7,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DiagnosisGraph } from "@/components/DiagnosisGraph";
+import { ScrambleText } from "@/components/ScrambleText";
 import { INTAKE_QUESTIONS, type IntakeFieldId } from "@/lib/intake";
 import type { DiagnosisResult } from "@/lib/pipeline";
 import type { DiagnosisRow } from "@/lib/store";
@@ -18,6 +19,8 @@ const DEFAULTS: FormState = {
   product: "",
   stage: "mid_build",
   multiStage: "yes",
+  experience: "",
+  expertise: "",
   stages: "",
   loudClaim: "",
   actualBehavior: "",
@@ -183,7 +186,7 @@ export default function DiagnosePage() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-5 py-16 sm:py-24">
+    <main className="mx-auto max-w-3xl px-5 pt-16 sm:pt-24 pb-28 sm:pb-24">
       {/* Header */}
       <motion.header
         initial={{ opacity: 0, y: 12 }}
@@ -199,18 +202,16 @@ export default function DiagnosePage() {
           </div>
         </div>
 
-        <h1 className="mt-4 font-sans font-black text-5xl leading-[1.05] tracking-wide sm:text-6xl uppercase">
+        <h1 className="mt-4 font-sans font-black text-3xl leading-[1.05] tracking-wide sm:text-4xl uppercase">
           Find the{" "}
           <span className="text-[#5fa324] italic">
             one wall.
           </span>
         </h1>
-        <p className="mt-5 max-w-xl text-[14px] leading-relaxed text-muted uppercase font-semibold">
-          For the mid-build builder with a multi-stage AI product. It reads what
-          you <em>say</em> is hard against what you&apos;ve <em>actually</em>{" "}
-          done, and returns a single falsifiable bottleneck — with a
-          kill-condition — or it refuses. Architecture exists to stop it being a
-          horoscope.
+        <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">
+          It reads what you <em>say</em> is hard against what you&apos;ve{" "}
+          <em>actually</em> done, and returns one falsifiable bottleneck — with a
+          kill-condition — or it refuses.
         </p>
 
         <div className="mt-6 flex flex-wrap gap-1.5">
@@ -266,7 +267,7 @@ export default function DiagnosePage() {
             transition={{ duration: 0.4 }}
           >
             {/* Form */}
-            <form onSubmit={submit} className="glass rounded-none p-6 sm:p-8">
+            <form id="intake-form" onSubmit={submit} className="glass rounded-none p-6 sm:p-8">
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 {INTAKE_QUESTIONS.map((q, i) => {
                   const fullWidth =
@@ -377,8 +378,8 @@ export default function DiagnosePage() {
                   transition={{ type: "spring", stiffness: 180, damping: 22 }}
                 >
                   {/* ── THE HEADLINE — words they couldn't find ── */}
-                  <div className="border border-accent/40 border-b-0 bg-[#5fa324]/[0.04] p-7 sm:p-10">
-                    <div className="flex flex-wrap items-center gap-3 mb-6">
+                  <div className="border border-accent/40 border-b-0 bg-[#5fa324]/[0.04] p-6 sm:p-8">
+                    <div className="flex flex-wrap items-center gap-3 mb-5">
                       <span className="border border-accent bg-[#5fa324]/10 px-3 py-1 font-[family-name:var(--font-mono)] text-[10px] font-bold tracking-[0.2em] text-accent uppercase">
                         {result.bottleneckLabel}
                       </span>
@@ -386,11 +387,11 @@ export default function DiagnosePage() {
                         DIAGNOSIS COMPLETE
                       </span>
                     </div>
-                    <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.3em] text-accent/60 uppercase mb-4">
+                    <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.3em] text-accent/60 uppercase mb-3">
                       THE WORDS YOU COULDN&apos;T FIND
                     </p>
-                    <p className="font-sans font-black text-3xl leading-[1.1] sm:text-4xl md:text-5xl text-white uppercase">
-                      {result.prediction}
+                    <p className="font-sans font-bold text-lg leading-snug sm:text-2xl text-white">
+                      <ScrambleText text={result.prediction ?? ""} duration={1100} />
                     </p>
                   </div>
 
@@ -492,6 +493,34 @@ export default function DiagnosePage() {
                       <p className="text-sm leading-relaxed text-fg/80 italic">{result.analogy}</p>
                     </div>
                   )}
+
+                  {/* ── WHAT NOW — clear next action ── */}
+                  <div className="border border-accent/40 border-b-0 bg-[#5fa324]/[0.04] p-6 sm:p-7">
+                    <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.3em] text-accent/60 uppercase mb-4">
+                      WHAT NOW
+                    </p>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <button
+                        onClick={() => {
+                          setActiveTab("history");
+                          loadHistory();
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        }}
+                        className="flex-1 rounded-none bg-[#5fa324] px-5 py-3.5 text-xs font-bold text-black uppercase tracking-widest transition-all duration-150 hover:brightness-110 active:scale-[0.98]"
+                      >
+                        Commit — log what you do next →
+                      </button>
+                      <button
+                        onClick={() => {
+                          setResult(null);
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        }}
+                        className="rounded-none border border-line bg-black/40 px-5 py-3.5 text-xs font-bold text-muted uppercase tracking-widest transition-all duration-150 hover:border-accent hover:text-accent"
+                      >
+                        Run another
+                      </button>
+                    </div>
+                  </div>
 
                   {/* ── META ── */}
                   <div className="border border-accent/40 p-5">
@@ -708,8 +737,42 @@ export default function DiagnosePage() {
       </AnimatePresence>
 
       <footer className="mt-20 text-center font-[family-name:var(--font-mono)] text-[10px] tracking-wider text-muted/40">
-        PHASE 2 · SUPABASE · CLERK AUTH · CLOSED TAXONOMY
+        CLOSED TAXONOMY · FALSIFIABLE PREDICTION · ABSTAIN IS VALID
       </footer>
+
+      {/* ── Mobile sticky CTA — always thumb-reachable ───────────────── */}
+      {!splash && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-line bg-black/95 backdrop-blur-md px-4 py-3">
+          {activeTab === "diagnose" && result?.status === "diagnosed" ? (
+            <button
+              onClick={() => {
+                setActiveTab("history");
+                loadHistory();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="w-full rounded-none bg-[#5fa324] px-5 py-3.5 text-xs font-bold text-black uppercase tracking-widest active:scale-[0.98] transition-transform"
+            >
+              Commit — log what you do next →
+            </button>
+          ) : activeTab === "diagnose" ? (
+            <button
+              type="submit"
+              form="intake-form"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 rounded-none bg-[#5fa324] px-5 py-3.5 text-xs font-bold text-black uppercase tracking-widest active:scale-[0.98] transition-transform disabled:opacity-60"
+            >
+              {loading ? <><Spinner /> Diagnosing…</> : <>Run diagnosis ▸</>}
+            </button>
+          ) : (
+            <button
+              onClick={() => setActiveTab("diagnose")}
+              className="w-full rounded-none border border-accent bg-[#5fa324]/10 px-5 py-3.5 text-xs font-bold text-accent uppercase tracking-widest active:scale-[0.98] transition-transform"
+            >
+              ← New diagnosis
+            </button>
+          )}
+        </div>
+      )}
 
       {/* ── GTA V Heads-Up Display (HUD) Status Bars ───────────────────── */}
       <div className="fixed bottom-6 left-6 z-40 hidden md:flex flex-col gap-2 bg-black/80 border border-line p-3.5 font-mono text-[9px] tracking-widest text-white/50 w-60">

@@ -48,9 +48,13 @@ const validBody = {
   product: "AI tutor",
   stage: "mid_build",
   multiStage: "yes",
+  experience: "first time with LLMs",
+  expertise: "frontend, no ML",
   stages: "1. setup\n2. agents",
   loudClaim: "I need to train a model",
   actualBehavior: "read papers, no code",
+  userFeedback: "showed two friends, they didn't reopen it",
+  manualWorkaround: "pasting into ChatGPT by hand",
 };
 
 beforeEach(() => {

@@ -33,7 +33,15 @@ export interface DiagnosisResult {
   missedSignals?: string[];
   nextSteps?: string[];
   graph?: {
-    nodes: { id: string; label: string; description: string; type: "current" | "step" | "goal" | "dead" }[];
+    nodes: {
+      id: string;
+      label: string;
+      description: string;
+      type: "current" | "step" | "goal" | "dead";
+      gap: string;
+      rabbitHole: string;
+      depth: "shallow" | "moderate" | "deep";
+    }[];
     edges: { from: string; to: string; type: "path" | "dead-end" }[];
   };
   // audit

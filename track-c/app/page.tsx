@@ -137,19 +137,17 @@ export default function LandingPage() {
         </p>
 
         {/* Inline typography images embedded inside heading */}
-        <h1 className="max-w-5xl font-sans font-black text-5xl leading-[1.05] tracking-tight sm:text-7xl text-white uppercase">
+        <h1 className="max-w-4xl font-sans font-black text-4xl leading-[1.05] tracking-tight sm:text-6xl text-white uppercase">
           You&apos;re not stuck because{" "}
           <span className="text-[#5fa324] italic">
             you&apos;re lost.
           </span>
           <br />
-          You&apos;re stuck because you lack
-          <span className="inline-block w-24 h-9 align-middle bg-cover bg-center mx-3 border-2 border-black shadow-[2px_2px_0px_#5fa324]" style={{ backgroundImage: "url('https://picsum.photos/seed/build/400/200')" }}></span>
-          a clear wall.
+          You&apos;re stuck because you lack a clear wall.
         </h1>
 
-        <p className="mt-8 max-w-xl text-[14px] tracking-wider leading-relaxed text-muted uppercase font-semibold">
-          Every stage of a multi-stage AI build feels equally urgent. We read the gap between your claims and your actual behavior to map your single bottleneck — or abstain.
+        <p className="mt-7 max-w-lg text-sm tracking-wide leading-relaxed text-muted">
+          Every stage of a multi-stage AI build feels equally urgent. We read the gap between what you claim and what you actually do, and map your single bottleneck — or abstain.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">

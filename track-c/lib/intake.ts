@@ -5,6 +5,8 @@ export type IntakeFieldId =
   | "product"
   | "stage"
   | "multiStage"
+  | "experience"
+  | "expertise"
   | "stages"
   | "loudClaim"
   | "actualBehavior"
@@ -27,6 +29,20 @@ export const INTAKE_QUESTIONS: IntakeQuestion[] = [
     hint: "One line. The domain AI product itself.",
     type: "text",
     placeholder: "e.g. an AI tutor that turns a syllabus into graded practice sets",
+  },
+  {
+    id: "experience",
+    label: "Your experience",
+    hint: "How seasoned are you as a builder?",
+    type: "text",
+    placeholder: "e.g. 3 yrs frontend — first time building with LLMs",
+  },
+  {
+    id: "expertise",
+    label: "Your domain expertise",
+    hint: "What do you genuinely know well already?",
+    type: "text",
+    placeholder: "e.g. React & UX — never trained a model or built an agent",
   },
   {
     id: "stages",
