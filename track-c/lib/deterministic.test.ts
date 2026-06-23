@@ -12,6 +12,8 @@ const baseIntake: Intake = {
   product: "an AI tutor that turns a syllabus into graded practice sets",
   stage: "mid_build",
   multiStage: "yes",
+  experience: "3 years frontend, first time building with LLMs",
+  expertise: "React and UX; never trained a model or built an agent",
   stages: "1. data setup\n2. agent orchestration\n3. fine-tuned model",
   loudClaim: "I need to train a custom model before any of this is real",
   actualBehavior: "read papers, rewrote the plan twice, didn't write any code",
