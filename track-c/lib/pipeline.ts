@@ -32,6 +32,11 @@ export interface DiagnosisResult {
   analogy?: string;
   missedSignals?: string[];
   nextSteps?: string[];
+  graph?: {
+    current: { label: string; description: string };
+    gaps: { label: string; description: string }[];
+    goal: { label: string; description: string };
+  };
   // audit
   meta: {
     model: string;
@@ -110,6 +115,7 @@ export async function runPipeline(intake: Intake): Promise<DiagnosisResult> {
     analogy: map.analogy,
     missedSignals: map.missed_signals,
     nextSteps: map.next_steps,
+    graph: map.graph,
     meta,
     rawModelOutput: map,
   };

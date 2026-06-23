@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { DiagnosisGraph } from "@/components/DiagnosisGraph";
 import { INTAKE_QUESTIONS, type IntakeFieldId } from "@/lib/intake";
 import type { DiagnosisResult } from "@/lib/pipeline";
 import type { DiagnosisRow } from "@/lib/store";
@@ -392,6 +393,14 @@ export default function DiagnosePage() {
                       {result.prediction}
                     </p>
                   </div>
+
+                  {/* ── JOURNEY MAP GRAPH ── */}
+                  {result.graph && (
+                    <DiagnosisGraph
+                      graph={result.graph}
+                      bottleneckLabel={result.bottleneckLabel ?? ""}
+                    />
+                  )}
 
                   {/* ── GROUNDED IN YOUR WORDS ── */}
                   <div className="border border-accent/40 border-b-0 bg-black/40 p-7">

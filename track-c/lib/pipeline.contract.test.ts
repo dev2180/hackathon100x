@@ -45,6 +45,13 @@ const validMap = {
   x_prediction: "go learn the hardest stage (model training) first",
   y_kill: "ship stage 1 (data setup) to one real user this week",
   analogy: "Like a climber who spends months studying advanced mountaineering theory but never leaves base camp.",
+  missed_signals: ["Re-wrote the plan twice — this is planning avoidance, not preparation."],
+  next_steps: ["Write code for stage 1 (data setup) today.", "Show it to one real user before refining."],
+  graph: {
+    current: { label: "Reading papers, no code", description: "You have a plan but zero shipped code." },
+    gaps: [{ label: "No working stage 1", description: "Stage 1 (data setup) is not complete and not shown to users." }],
+    goal: { label: "AI tutor live with users", description: "A graded practice set generated from a real syllabus, tested by real students." },
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -111,6 +118,7 @@ describe("pipeline contract — Call 2 failure paths", () => {
   // MICRO-TASK 2.5
   it("abstains when model explicitly returns ABSTAIN", async () => {
     vi.mocked(mapBottleneck).mockResolvedValue({
+      ...validMap,
       bottleneck: "ABSTAIN",
       evidence_quote: "",
       x_prediction: "",
@@ -132,12 +140,9 @@ describe("pipeline contract — deterministic validators", () => {
   // MICRO-TASK 2.6
   it("abstains when bottleneck is outside the closed taxonomy", async () => {
     vi.mocked(mapBottleneck).mockResolvedValue({
+      ...validMap,
       // "perfectionism" is not in BOTTLENECKS
       bottleneck: "perfectionism" as never,
-      evidence_quote: "I need to train a custom model",
-      x_prediction: "keep perfecting",
-      y_kill: "ship something",
-      analogy: "",
     });
 
     const result = await runPipeline(inScopeIntake);

@@ -31,6 +31,11 @@ export const BottleneckMapSchema = z.object({
   analogy: z.string().min(1, "Provide a detailed analogy comparing their build state to a real-world scenario."),
   missed_signals: z.array(z.string()).min(1).max(3),
   next_steps: z.array(z.string()).min(2).max(4),
+  graph: z.object({
+    current: z.object({ label: z.string(), description: z.string() }),
+    gaps: z.array(z.object({ label: z.string(), description: z.string() })).min(1).max(3),
+    goal: z.object({ label: z.string(), description: z.string() }),
+  }),
 });
 export type BottleneckMap = z.infer<typeof BottleneckMapSchema>;
 
@@ -101,7 +106,44 @@ export const BOTTLENECK_TOOL_SCHEMA = {
       description:
         "2-4 concrete, sequenced actions that directly address this specific bottleneck. Each step must be specific to their intake — not generic advice. Start each step with an action verb.",
     },
+    graph: {
+      type: "object",
+      description: "A journey graph showing where the builder is, what is blocking them, and what success looks like.",
+      properties: {
+        current: {
+          type: "object",
+          properties: {
+            label: { type: "string", description: "Short label for where they are now (max 6 words)." },
+            description: { type: "string", description: "One sentence describing their actual current state, grounded in their intake." },
+          },
+          required: ["label", "description"],
+        },
+        gaps: {
+          type: "array",
+          minItems: 1,
+          maxItems: 3,
+          description: "1-3 nodes for what is missing or blocking the path. First gap is the primary bottleneck. Others are secondary blockers or preconditions they haven't addressed.",
+          items: {
+            type: "object",
+            properties: {
+              label: { type: "string", description: "Short label for this gap (max 5 words)." },
+              description: { type: "string", description: "One sentence explaining what is missing and why it matters." },
+            },
+            required: ["label", "description"],
+          },
+        },
+        goal: {
+          type: "object",
+          properties: {
+            label: { type: "string", description: "Short label for the end goal (max 6 words), derived from their product description." },
+            description: { type: "string", description: "One sentence describing what success looks like for this specific builder." },
+          },
+          required: ["label", "description"],
+        },
+      },
+      required: ["current", "gaps", "goal"],
+    },
   },
-  required: ["bottleneck", "evidence_quote", "x_prediction", "y_kill", "analogy", "missed_signals", "next_steps"],
+  required: ["bottleneck", "evidence_quote", "x_prediction", "y_kill", "analogy", "missed_signals", "next_steps", "graph"],
   additionalProperties: false,
 };
