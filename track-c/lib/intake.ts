@@ -29,27 +29,6 @@ export const INTAKE_QUESTIONS: IntakeQuestion[] = [
     placeholder: "e.g. an AI tutor that turns a syllabus into graded practice sets",
   },
   {
-    id: "stage",
-    label: "What stage are you actually at?",
-    type: "select",
-    options: [
-      { value: "idea", label: "Just an idea" },
-      { value: "planning", label: "Planning / researching" },
-      { value: "mid_build", label: "Mid-build — something partly works" },
-      { value: "launched", label: "Launched / in users' hands" },
-    ],
-  },
-  {
-    id: "multiStage",
-    label: "Is it a multi-stage AI product?",
-    hint: "e.g. setup → agents → iteration → custom model. Distinct stages, not one call.",
-    type: "select",
-    options: [
-      { value: "yes", label: "Yes — multiple distinct stages" },
-      { value: "no", label: "No — a single model / single step" },
-    ],
-  },
-  {
     id: "stages",
     label: "Name the stages.",
     hint: "List them in the order you imagine building them.",
