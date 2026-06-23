@@ -1,0 +1,277 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --bg: #050505;
+  --bg-soft: #0c0c0c;
+  --fg: #fcfcfc;
+  --muted: #9e9e9e;
+  --line: #222222;
+  --accent: #5fa324;
+  --accent-2: #1f83b4;
+  --warm: #f0c243;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-warm: var(--warm);
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-outfit), Georgia, serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+}
+
+html {
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Authentic CRT Scanline & Grid Monitor Overlay */
+html::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+  background-size: 100% 4px;
+  z-index: 999999;
+  pointer-events: none;
+  opacity: 0.12;
+}
+
+body {
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Hide default cursor on desktop to support premium custom cursor */
+@media (pointer: fine) {
+  html, body, a, button, select, input, textarea, [role='button'], .glass, .cl-socialButtonsBlockButton, .cl-formButtonPrimary, .cl-userButtonTrigger, .cl-rootBox, iframe {
+    cursor: none !important;
+  }
+}
+
+.glass {
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent); /* Classic Interaction Menu green strip */
+  backdrop-filter: blur(8px);
+}
+
+.field {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 0px !important;
+  padding: 0.7rem 0.9rem;
+  color: var(--fg);
+  font-size: 0.95rem;
+  transition: all 0.05s ease-in-out; /* Instant reaction matching GTA menu */
+  outline: none;
+  font-family: var(--font-sans), sans-serif;
+}
+.field::placeholder {
+  color: #777;
+}
+.field:hover {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.05);
+}
+.field:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+textarea.field {
+  resize: vertical;
+  min-height: 5.5rem;
+  line-height: 1.5;
+  border-radius: 0px !important;
+}
+select.field {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235fa324' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  padding-right: 2.2rem;
+  cursor: pointer;
+  border-radius: 0px !important;
+}
+select.field option {
+  background: var(--bg-soft);
+  color: var(--fg);
+}
+
+::selection {
+  background: rgba(95, 163, 36, 0.3);
+  color: #fff;
+}
+
+/* ── Clerk v7 Custom Styling Overrides ────────────────────────────────── */
+.cl-rootBox {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+}
+
+.cl-card {
+  background: rgba(10, 10, 10, 0.95) !important;
+  border: 1px solid var(--line) !important;
+  border-left: 5px solid var(--accent) !important; /* Thick green left stripe */
+  border-radius: 0px !important;
+  backdrop-filter: blur(12px) !important;
+  box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.8) !important;
+  color: var(--fg) !important;
+}
+
+.cl-headerTitle {
+  color: var(--fg) !important;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.cl-headerSubtitle {
+  color: var(--muted) !important;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 0.85rem !important;
+  margin-top: 0.5rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.025em !important;
+}
+
+.cl-socialButtonsBlockButton {
+  border: 1px solid var(--line) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-radius: 0px !important;
+  transition: all 0.2s ease-in-out !important;
+  height: 48px !important;
+}
+
+.cl-socialButtonsBlockButton:hover {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+.cl-socialButtonsBlockButton:hover .cl-socialButtonsBlockButtonText {
+  color: #000 !important;
+}
+
+.cl-socialButtonsBlockButton:active {
+  transform: scale(0.96) !important;
+}
+
+.cl-socialButtonsBlockButtonText {
+  color: var(--fg) !important;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+}
+
+.cl-dividerLine {
+  background-color: var(--line) !important;
+}
+
+.cl-dividerText {
+  color: var(--muted) !important;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 0.8rem !important;
+  text-transform: uppercase !important;
+}
+
+.cl-formFieldLabel {
+  color: var(--fg) !important;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+  margin-bottom: 0.4rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.cl-formFieldInput {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid var(--line) !important;
+  color: var(--fg) !important;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+  border-radius: 0px !important;
+  padding: 0.75rem 0.9rem !important;
+  font-size: 0.95rem !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+.cl-formFieldInput:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1px var(--accent) !important;
+}
+
+.cl-formButtonPrimary {
+  background: var(--accent) !important; /* Solid Franklin green */
+  color: #000 !important; /* High contrast black text */
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+  font-weight: 800 !important;
+  border-radius: 0px !important;
+  height: 46px !important;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.cl-formButtonPrimary:hover {
+  filter: brightness(1.1) !important;
+}
+
+.cl-formButtonPrimary:active {
+  transform: scale(0.96) !important;
+}
+
+.cl-footerActionText {
+  color: var(--muted) !important;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 0.85rem !important;
+}
+
+.cl-footerActionLink {
+  color: var(--accent) !important;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  transition: all 0.2s ease !important;
+}
+
+.cl-footerActionLink:hover {
+  filter: brightness(1.2) !important;
+}
+
+.cl-userButtonPopoverCard {
+  background: var(--bg-soft) !important;
+  border: 1px solid var(--line) !important;
+  border-left: 4px solid var(--accent) !important;
+  border-radius: 0px !important;
+}
+
+.cl-userButtonOuterIdentifier {
+  color: var(--fg) !important;
+}
+
+.cl-developmentModeSign,
+.cl-developmentModeSignText,
+.cl-developmentModeSignContainer,
+.cl-internal-1dauvto,
+.cl-internal-17cgg69,
+.cl-internal-52n8n5,
+.cl-internal-j59939,
+[data-localization-key="developmentMode"],
+div:has(> a[aria-label="Clerk logo"]) {
+  display: none !important;
+}
+
