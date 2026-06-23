@@ -15,6 +15,8 @@ const baseIntake: Intake = {
   stages: "1. data setup\n2. agent orchestration\n3. fine-tuned model",
   loudClaim: "I need to train a custom model before any of this is real",
   actualBehavior: "read papers, rewrote the plan twice, didn't write any code",
+  userFeedback: "showed prototype to two friends, they said cool but didn't open it again",
+  manualWorkaround: "copying syllabus details into ChatGPT manually",
 };
 
 describe("scope gate", () => {

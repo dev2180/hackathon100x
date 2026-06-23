@@ -28,6 +28,8 @@ const inScopeIntake = {
   stages: "1. data setup\n2. agent orchestration\n3. fine-tuned model",
   loudClaim: "I need to train a custom model before any of this is real",
   actualBehavior: "read papers on fine-tuning, rewrote the plan twice, didn't write any code",
+  userFeedback: "showed prototype to two friends, they said it was cool but didn't open it again",
+  manualWorkaround: "copying syllabus details into ChatGPT manually",
 };
 
 const validSignal = {
@@ -42,6 +44,7 @@ const validMap = {
   evidence_quote: "I need to train a custom model",
   x_prediction: "go learn the hardest stage (model training) first",
   y_kill: "ship stage 1 (data setup) to one real user this week",
+  analogy: "Like a climber who spends months studying advanced mountaineering theory but never leaves base camp.",
 };
 
 // ---------------------------------------------------------------------------
@@ -112,6 +115,7 @@ describe("pipeline contract — Call 2 failure paths", () => {
       evidence_quote: "",
       x_prediction: "",
       y_kill: "",
+      analogy: "",
     });
 
     const result = await runPipeline(inScopeIntake);
@@ -133,6 +137,7 @@ describe("pipeline contract — deterministic validators", () => {
       evidence_quote: "I need to train a custom model",
       x_prediction: "keep perfecting",
       y_kill: "ship something",
+      analogy: "",
     });
 
     const result = await runPipeline(inScopeIntake);

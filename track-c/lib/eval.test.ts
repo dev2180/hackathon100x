@@ -37,6 +37,8 @@ const FLAT_TERRAIN_INTAKE = {
   stages: "1. data setup\n2. agent orchestration\n3. fine-tuned model",
   loudClaim: "I need to train a custom model before any of this is real and useful.",
   actualBehavior: "read papers on fine-tuning, rewrote the plan twice, didn't write any code.",
+  userFeedback: "showed prototype to two friends last month, they said it was cool but didn't come back.",
+  manualWorkaround: "teachers are copying syllabus into ChatGPT and pasting questions manually.",
 };
 
 const FEAR_OF_SHIPPING_INTAKE = {
@@ -46,6 +48,8 @@ const FEAR_OF_SHIPPING_INTAKE = {
   stages: "1. parser\n2. schema generator\n3. web dashboard",
   loudClaim: "I need to rewrite the generator in Rust to optimize speed before anyone uses it.",
   actualBehavior: "finished the parser and generator in Python, works fine, but haven't given access to anyone.",
+  userFeedback: "showed a friend the CLI output, they said it looked useful but I haven't given them access.",
+  manualWorkaround: "developers are writing schema migrations by hand in SQL.",
 };
 
 const VAGUE_INTAKE = {
@@ -55,6 +59,8 @@ const VAGUE_INTAKE = {
   stages: "not sure yet",
   loudClaim: "everything is hard",
   actualBehavior: "thinking about it",
+  userFeedback: "haven't shown it to anyone",
+  manualWorkaround: "not sure",
 };
 
 describe("Grok AI Model Evaluation (Real Calls)", () => {
