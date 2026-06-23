@@ -33,9 +33,8 @@ export interface DiagnosisResult {
   missedSignals?: string[];
   nextSteps?: string[];
   graph?: {
-    current: { label: string; description: string };
-    gaps: { label: string; description: string }[];
-    goal: { label: string; description: string };
+    nodes: { id: string; label: string; description: string; type: "current" | "step" | "goal" | "dead" }[];
+    edges: { from: string; to: string; type: "path" | "dead-end" }[];
   };
   // audit
   meta: {

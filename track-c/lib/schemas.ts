@@ -32,9 +32,17 @@ export const BottleneckMapSchema = z.object({
   missed_signals: z.array(z.string()).min(1).max(3),
   next_steps: z.array(z.string()).min(2).max(4),
   graph: z.object({
-    current: z.object({ label: z.string(), description: z.string() }),
-    gaps: z.array(z.object({ label: z.string(), description: z.string() })).min(1).max(3),
-    goal: z.object({ label: z.string(), description: z.string() }),
+    nodes: z.array(z.object({
+      id: z.string(),
+      label: z.string(),
+      description: z.string(),
+      type: z.enum(["current", "step", "goal", "dead"]),
+    })).min(3).max(9),
+    edges: z.array(z.object({
+      from: z.string(),
+      to: z.string(),
+      type: z.enum(["path", "dead-end"]),
+    })).min(2).max(12),
   }),
 });
 export type BottleneckMap = z.infer<typeof BottleneckMapSchema>;
@@ -108,40 +116,44 @@ export const BOTTLENECK_TOOL_SCHEMA = {
     },
     graph: {
       type: "object",
-      description: "A journey graph showing where the builder is, what is blocking them, and what success looks like.",
+      description: "A directed node-edge journey map. The main path goes current→step→...→goal. Dead-end branches show wrong moves the builder will instinctively try.",
       properties: {
-        current: {
-          type: "object",
-          properties: {
-            label: { type: "string", description: "Short label for where they are now (max 6 words)." },
-            description: { type: "string", description: "One sentence describing their actual current state, grounded in their intake." },
-          },
-          required: ["label", "description"],
-        },
-        gaps: {
+        nodes: {
           type: "array",
-          minItems: 1,
-          maxItems: 3,
-          description: "1-3 nodes for what is missing or blocking the path. First gap is the primary bottleneck. Others are secondary blockers or preconditions they haven't addressed.",
+          minItems: 3,
+          maxItems: 9,
+          description: "All nodes. Must include exactly one 'current' and one 'goal'. Include 2-3 'step' nodes on the main path. Include 1-3 'dead' nodes for the wrong moves this builder will likely attempt — these branch off main path nodes.",
           items: {
             type: "object",
             properties: {
-              label: { type: "string", description: "Short label for this gap (max 5 words)." },
-              description: { type: "string", description: "One sentence explaining what is missing and why it matters." },
+              id:          { type: "string", description: "Unique snake_case ID, e.g. 'step_1', 'dead_1'." },
+              label:       { type: "string", description: "Short label, max 5 words." },
+              description: { type: "string", description: "One sentence. For 'dead' nodes: explain exactly why this path leads nowhere for this builder specifically." },
+              type:        { type: "string", enum: ["current", "step", "goal", "dead"] },
             },
-            required: ["label", "description"],
+            required: ["id", "label", "description", "type"],
+            additionalProperties: false,
           },
         },
-        goal: {
-          type: "object",
-          properties: {
-            label: { type: "string", description: "Short label for the end goal (max 6 words), derived from their product description." },
-            description: { type: "string", description: "One sentence describing what success looks like for this specific builder." },
+        edges: {
+          type: "array",
+          minItems: 2,
+          maxItems: 12,
+          description: "Directed edges. Use type='path' for the correct route (current→steps→goal). Use type='dead-end' for branches from a main-path node to a 'dead' node.",
+          items: {
+            type: "object",
+            properties: {
+              from: { type: "string", description: "Source node id." },
+              to:   { type: "string", description: "Target node id." },
+              type: { type: "string", enum: ["path", "dead-end"] },
+            },
+            required: ["from", "to", "type"],
+            additionalProperties: false,
           },
-          required: ["label", "description"],
         },
       },
-      required: ["current", "gaps", "goal"],
+      required: ["nodes", "edges"],
+      additionalProperties: false,
     },
   },
   required: ["bottleneck", "evidence_quote", "x_prediction", "y_kill", "analogy", "missed_signals", "next_steps", "graph"],

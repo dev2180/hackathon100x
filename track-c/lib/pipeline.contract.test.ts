@@ -48,9 +48,17 @@ const validMap = {
   missed_signals: ["Re-wrote the plan twice — this is planning avoidance, not preparation."],
   next_steps: ["Write code for stage 1 (data setup) today.", "Show it to one real user before refining."],
   graph: {
-    current: { label: "Reading papers, no code", description: "You have a plan but zero shipped code." },
-    gaps: [{ label: "No working stage 1", description: "Stage 1 (data setup) is not complete and not shown to users." }],
-    goal: { label: "AI tutor live with users", description: "A graded practice set generated from a real syllabus, tested by real students." },
+    nodes: [
+      { id: "current", type: "current" as const, label: "Reading papers, no code", description: "You have a plan but zero shipped code." },
+      { id: "step_1", type: "step" as const, label: "Write stage 1 code", description: "Build the data-setup stage end to end." },
+      { id: "dead_1", type: "dead" as const, label: "Study fine-tuning first", description: "Starting with the hardest stage means you will never reach users." },
+      { id: "goal", type: "goal" as const, label: "AI tutor live with students", description: "A graded practice set generated from a real syllabus, tested by real students." },
+    ],
+    edges: [
+      { from: "current", to: "step_1", type: "path" as const },
+      { from: "current", to: "dead_1", type: "dead-end" as const },
+      { from: "step_1", to: "goal", type: "path" as const },
+    ],
   },
 };
 
