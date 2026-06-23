@@ -1,4 +1,3 @@
-import { auth } from "@clerk/nextjs/server";
 import { storeOutcome } from "@/lib/store";
 import { z } from "zod";
 
@@ -11,9 +10,6 @@ const OutcomeSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
-  const activeUserId = userId || "local";
-
   let body: unknown;
   try {
     body = await request.json();

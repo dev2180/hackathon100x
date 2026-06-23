@@ -1,4 +1,3 @@
-import { auth } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
 import type { Intake } from "./schemas";
 import type { DiagnosisResult } from "./pipeline";
@@ -64,11 +63,8 @@ export interface OutcomeRow {
   created_at: string;
 }
 
-// Create a Supabase client configured with the logged-in user's Clerk token
+// Phase 2: Supabase client (unused in Phase 1)
 export async function getSupabaseClient() {
-  const { getToken } = await auth();
-  const token = await getToken({ template: "supabase" });
-
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -76,13 +72,7 @@ export async function getSupabaseClient() {
     throw new Error("Supabase URL or Anon Key is not set in environment variables.");
   }
 
-  return createClient(supabaseUrl, supabaseKey, {
-    global: {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    },
-  });
+  return createClient(supabaseUrl, supabaseKey);
 }
 
 export async function storeDiagnosis(

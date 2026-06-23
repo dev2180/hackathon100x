@@ -1,4 +1,3 @@
-import { auth } from "@clerk/nextjs/server";
 import { IntakeSchema } from "@/lib/schemas";
 import { runPipeline } from "@/lib/pipeline";
 import { storeDiagnosis, getRecentDiagnosisCount } from "@/lib/store";
@@ -7,8 +6,7 @@ import { storeDiagnosis, getRecentDiagnosisCount } from "@/lib/store";
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
-  const activeUserId = userId || "local";
+  const activeUserId = "local";
 
   let body: unknown;
   try {

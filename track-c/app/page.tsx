@@ -5,7 +5,6 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { useAuth, UserButton } from "@clerk/nextjs";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -45,8 +44,6 @@ const HOW_IT_WORKS = [
 ];
 
 export default function LandingPage() {
-  const { isLoaded, userId } = useAuth();
-  
   const heroRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
@@ -123,42 +120,12 @@ export default function LandingPage() {
             TRACK&nbsp;C
           </span>
           <div className="flex items-center gap-6">
-            {!isLoaded ? (
-              <span className="font-[family-name:var(--font-mono)] text-[9px] tracking-widest text-muted">
-                LOADING...
-              </span>
-            ) : userId ? (
-              <>
-                <Link
-                  href="/diagnose"
-                  className="inline-block border border-accent bg-[#5fa324]/10 hover:bg-[#5fa324] hover:text-black px-4 py-1.5 font-[family-name:var(--font-mono)] text-[10px] tracking-wider text-accent transition-all duration-150 active:scale-95 uppercase font-bold rounded-none"
-                >
-                  RUN DIAGNOSIS →
-                </Link>
-                <UserButton />
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/diagnose"
-                  className="inline-block font-[family-name:var(--font-mono)] text-[10px] tracking-wider text-[#5fa324] transition-all duration-200 hover:text-white hover:-translate-y-0.5 active:scale-95 mr-2"
-                >
-                  GUEST ACCESS →
-                </Link>
-                <Link
-                  href="/sign-in"
-                  className="inline-block font-[family-name:var(--font-mono)] text-[10px] tracking-wider text-muted transition-all duration-200 hover:text-fg hover:-translate-y-0.5 active:scale-95"
-                >
-                  SIGN IN
-                </Link>
-                <Link
-                  href="/sign-up"
-                  className="inline-block bg-[#5fa324] border border-[#5fa324] px-5 py-2 font-[family-name:var(--font-mono)] text-[10px] font-bold tracking-wider text-black transition-all duration-150 hover:bg-black hover:text-[#5fa324] active:scale-95 uppercase rounded-none"
-                >
-                  GET STARTED
-                </Link>
-              </>
-            )}
+            <Link
+              href="/diagnose"
+              className="inline-block border border-accent bg-[#5fa324]/10 hover:bg-[#5fa324] hover:text-black px-4 py-1.5 font-[family-name:var(--font-mono)] text-[10px] tracking-wider text-accent transition-all duration-150 active:scale-95 uppercase font-bold rounded-none"
+            >
+              RUN DIAGNOSIS →
+            </Link>
           </div>
         </nav>
       </div>
@@ -186,37 +153,12 @@ export default function LandingPage() {
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          {!isLoaded ? (
-            <span className="text-sm text-muted uppercase font-bold tracking-widest">Confirming credentials...</span>
-          ) : userId ? (
-            <Link
-              href="/diagnose"
-              className="inline-flex items-center gap-2 bg-[#5fa324] px-8 py-4 text-xs font-bold text-black uppercase tracking-widest transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5 active:scale-[0.97]"
-            >
-              Run your diagnosis →
-            </Link>
-          ) : (
-            <>
-              <Link
-                href="/sign-up"
-                className="inline-flex items-center gap-2 bg-[#5fa324] px-8 py-4 text-xs font-bold text-black uppercase tracking-widest transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5 active:scale-[0.97]"
-              >
-                Find your wall →
-              </Link>
-              <Link
-                href="/diagnose"
-                className="inline-flex items-center gap-2 border border-white/20 bg-white/5 hover:bg-white/10 px-8 py-4 text-xs font-bold text-white uppercase tracking-widest transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.97]"
-              >
-                Continue without signing in
-              </Link>
-              <Link
-                href="/sign-in"
-                className="inline-block text-xs font-bold text-white/80 tracking-widest uppercase transition-all duration-200 hover:text-white hover:-translate-y-0.5 active:scale-[0.97] underline underline-offset-4"
-              >
-                Already registered?
-              </Link>
-            </>
-          )}
+          <Link
+            href="/diagnose"
+            className="inline-flex items-center gap-2 bg-[#5fa324] px-8 py-4 text-xs font-bold text-black uppercase tracking-widest transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5 active:scale-[0.97]"
+          >
+            Find your wall →
+          </Link>
         </div>
       </section>
 
@@ -271,23 +213,12 @@ export default function LandingPage() {
             Predictions are strictly falsifiable. If the diagnosis changes nothing, it was a horoscope. If you choose a concrete action step or drop an out-of-scope stage, the diagnostic succeeded.
           </p>
           <div className="mt-8 flex justify-center">
-            {!isLoaded ? (
-              <span className="text-xs font-bold text-muted uppercase tracking-widest">Checking authentication...</span>
-            ) : userId ? (
-              <Link
-                href="/diagnose"
-                className="inline-flex items-center gap-2 bg-[#5fa324] px-6 py-3.5 text-xs font-bold text-black uppercase tracking-widest transition hover:brightness-110"
-              >
-                Test it on yourself →
-              </Link>
-            ) : (
-              <Link
-                href="/sign-up"
-                className="inline-flex items-center gap-2 bg-[#5fa324] px-6 py-3.5 text-xs font-bold text-black uppercase tracking-widest transition hover:brightness-110"
-              >
-                Find your bottleneck →
-              </Link>
-            )}
+            <Link
+              href="/diagnose"
+              className="inline-flex items-center gap-2 bg-[#5fa324] px-6 py-3.5 text-xs font-bold text-black uppercase tracking-widest transition hover:brightness-110"
+            >
+              Test it on yourself →
+            </Link>
           </div>
         </div>
       </section>

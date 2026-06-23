@@ -6,7 +6,6 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useUser, UserButton } from "@clerk/nextjs";
 import { INTAKE_QUESTIONS, type IntakeFieldId } from "@/lib/intake";
 import type { DiagnosisResult } from "@/lib/pipeline";
 import type { DiagnosisRow } from "@/lib/store";
@@ -35,7 +34,6 @@ const PIPELINE = [
 ];
 
 export default function DiagnosePage() {
-  const { user } = useUser();
   const [activeTab, setActiveTab] = useState<"diagnose" | "history">("diagnose");
   const [form, setForm] = useState<FormState>(DEFAULTS);
   const [loading, setLoading] = useState(false);
@@ -196,12 +194,7 @@ export default function DiagnosePage() {
             TRACK&nbsp;C · DIAGNOSTIC
           </p>
           <div className="flex items-center gap-3">
-            {user && (
-              <span className="font-[family-name:var(--font-mono)] text-xs text-muted">
-                {user.primaryEmailAddress?.emailAddress}
-              </span>
-            )}
-            <UserButton />
+            <span className="font-[family-name:var(--font-mono)] text-[9px] tracking-widest text-muted/40 uppercase">GUEST</span>
           </div>
         </div>
 
