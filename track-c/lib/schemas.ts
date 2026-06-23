@@ -29,6 +29,8 @@ export const BottleneckMapSchema = z.object({
   x_prediction: z.string(),
   y_kill: z.string(),
   analogy: z.string().min(1, "Provide a detailed analogy comparing their build state to a real-world scenario."),
+  missed_signals: z.array(z.string()).min(1).max(3),
+  next_steps: z.array(z.string()).min(2).max(4),
 });
 export type BottleneckMap = z.infer<typeof BottleneckMapSchema>;
 
@@ -83,7 +85,23 @@ export const BOTTLENECK_TOOL_SCHEMA = {
       description:
         "A detailed real-world analogy with clear structural separation showing why their current path is stuck.",
     },
+    missed_signals: {
+      type: "array",
+      items: { type: "string" },
+      minItems: 1,
+      maxItems: 3,
+      description:
+        "1-3 specific things the builder said or implied that reveal the bottleneck but that they likely didn't recognize as significant. Each item should start with a brief quote or paraphrase from their intake, followed by what it actually signals.",
+    },
+    next_steps: {
+      type: "array",
+      items: { type: "string" },
+      minItems: 2,
+      maxItems: 4,
+      description:
+        "2-4 concrete, sequenced actions that directly address this specific bottleneck. Each step must be specific to their intake — not generic advice. Start each step with an action verb.",
+    },
   },
-  required: ["bottleneck", "evidence_quote", "x_prediction", "y_kill", "analogy"],
+  required: ["bottleneck", "evidence_quote", "x_prediction", "y_kill", "analogy", "missed_signals", "next_steps"],
   additionalProperties: false,
 };

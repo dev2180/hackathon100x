@@ -368,61 +368,127 @@ export default function DiagnosePage() {
               )}
 
               {result?.status === "diagnosed" && (
-                <ResultShell tone="accent">
-                  <div className="flex items-center gap-3">
-                    <span className="rounded-none border border-accent/40 bg-accent/10 px-3 py-1 font-[family-name:var(--font-mono)] text-[10px] font-bold tracking-wider text-accent uppercase">
-                      {result.bottleneckLabel}
-                    </span>
-                    <span className="font-[family-name:var(--font-mono)] text-xs tracking-widest text-muted">
-                      DIAGNOSIS
-                    </span>
+                <motion.section
+                  className="mt-8 space-y-0"
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 180, damping: 22 }}
+                >
+                  {/* ── THE HEADLINE — words they couldn't find ── */}
+                  <div className="border border-accent/40 border-b-0 bg-[#5fa324]/[0.04] p-7 sm:p-10">
+                    <div className="flex flex-wrap items-center gap-3 mb-6">
+                      <span className="border border-accent bg-[#5fa324]/10 px-3 py-1 font-[family-name:var(--font-mono)] text-[10px] font-bold tracking-[0.2em] text-accent uppercase">
+                        {result.bottleneckLabel}
+                      </span>
+                      <span className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.35em] text-muted/50 uppercase">
+                        DIAGNOSIS COMPLETE
+                      </span>
+                    </div>
+                    <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.3em] text-accent/60 uppercase mb-4">
+                      THE WORDS YOU COULDN&apos;T FIND
+                    </p>
+                    <p className="font-sans font-black text-3xl leading-[1.1] sm:text-4xl md:text-5xl text-white uppercase">
+                      {result.prediction}
+                    </p>
                   </div>
 
-                  <p className="mt-5 font-sans font-bold text-2xl leading-snug sm:text-[28px] uppercase">
-                    {result.prediction}
-                  </p>
-
-                  <div className="mt-6 rounded-none border border-line border-l-2 border-l-accent bg-white/[0.02] p-4">
-                    <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-widest text-muted uppercase font-bold">
-                      GROUNDED IN YOUR WORDS
+                  {/* ── GROUNDED IN YOUR WORDS ── */}
+                  <div className="border border-accent/40 border-b-0 bg-black/40 p-7">
+                    <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.3em] text-muted/50 uppercase mb-3">
+                      WE HEARD YOU SAY
                     </p>
-                    <p className="mt-2 text-sm italic text-fg/90">
+                    <blockquote className="border-l-2 border-accent pl-5 text-lg italic leading-relaxed text-fg/90 sm:text-xl">
                       &ldquo;{result.evidence}&rdquo;
+                    </blockquote>
+                    <p className="mt-3 font-[family-name:var(--font-mono)] text-[9px] tracking-widest text-muted/40 uppercase">
+                      This is the exact line that grounded the diagnosis.
                     </p>
                   </div>
 
-                  <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div className="rounded-none border border-line p-4 border-t-2 border-t-warm">
-                      <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-widest text-warm uppercase font-bold">
-                        THE WRONG MOVE (X)
+                  {/* ── MISSED SIGNALS — things they said but didn't see ── */}
+                  {result.missedSignals && result.missedSignals.length > 0 && (
+                    <div className="border border-accent/40 border-b-0 bg-black/30 p-7">
+                      <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.3em] text-muted/50 uppercase mb-5">
+                        WHAT YOU SAID — WHAT IT ACTUALLY REVEALED
                       </p>
-                      <p className="mt-2 text-xs leading-relaxed text-fg/90 uppercase font-medium">
-                        {result.xPrediction}
-                      </p>
-                    </div>
-                    <div className="rounded-none border border-line p-4 border-t-2 border-t-accent-2">
-                      <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-widest text-accent-2 uppercase font-bold">
-                        KILL-CONDITION (Y)
-                      </p>
-                      <p className="mt-2 text-xs leading-relaxed text-fg/90 uppercase font-medium">
-                        {result.yKill}
-                      </p>
-                    </div>
-                  </div>
-
-                  {result.analogy && (
-                    <div className="mt-5 rounded-none border border-accent-2/30 border-l-4 border-l-accent-2 bg-accent-2/[0.04] p-5">
-                      <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-widest text-accent-2 uppercase font-bold mb-3">
-                        ANALOGICAL DIAGNOSIS
-                      </p>
-                      <p className="text-sm leading-relaxed text-fg/90 italic">
-                        {result.analogy}
-                      </p>
+                      <div className="space-y-4">
+                        {result.missedSignals.map((signal, i) => (
+                          <div key={i} className="flex gap-4 items-start">
+                            <span className="mt-0.5 font-[family-name:var(--font-mono)] text-[9px] text-accent/50 tracking-widest shrink-0">
+                              {String(i + 1).padStart(2, "0")}
+                            </span>
+                            <p className="text-sm leading-relaxed text-fg/80">{signal}</p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
 
-                  <Meta meta={result.meta} />
-                </ResultShell>
+                  {/* ── X vs Y — wrong move / kill condition ── */}
+                  <div className="border border-accent/40 border-b-0 grid grid-cols-1 sm:grid-cols-2">
+                    <div className="p-7 border-b sm:border-b-0 sm:border-r border-accent/20 bg-red-950/10">
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="w-5 h-5 rounded-full bg-red-600/20 border border-red-600/40 flex items-center justify-center text-red-500 text-[10px] font-bold">✕</span>
+                        <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.25em] text-red-500/70 uppercase font-bold">
+                          THE WRONG TURN YOU&apos;LL TAKE
+                        </p>
+                      </div>
+                      <p className="text-sm leading-relaxed text-fg/85">{result.xPrediction}</p>
+                      <p className="mt-3 font-[family-name:var(--font-mono)] text-[8px] tracking-widest text-muted/30 uppercase">
+                        This is what happens if nothing changes.
+                      </p>
+                    </div>
+                    <div className="p-7 bg-[#5fa324]/[0.04]">
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="w-5 h-5 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-accent text-[10px] font-bold">→</span>
+                        <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.25em] text-accent/70 uppercase font-bold">
+                          THE PROOF TEST
+                        </p>
+                      </div>
+                      <p className="text-sm leading-relaxed text-fg/85">{result.yKill}</p>
+                      <p className="mt-3 font-[family-name:var(--font-mono)] text-[8px] tracking-widest text-muted/30 uppercase">
+                        If you do this and the diagnosis is wrong, you&apos;ll know.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* ── BROKEN STEPS FORWARD ── */}
+                  {result.nextSteps && result.nextSteps.length > 0 && (
+                    <div className="border border-accent/40 border-b-0 bg-black/50 p-7">
+                      <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.3em] text-accent/60 uppercase mb-6">
+                        BROKEN STEPS FORWARD — SPECIFIC TO YOUR BUILD
+                      </p>
+                      <div className="space-y-5">
+                        {result.nextSteps.map((step, i) => (
+                          <div key={i} className="flex gap-5 items-start group">
+                            <div className="shrink-0 mt-0.5 w-8 h-8 border border-accent/30 bg-[#5fa324]/10 group-hover:bg-[#5fa324]/20 flex items-center justify-center transition-colors">
+                              <span className="font-[family-name:var(--font-mono)] text-[10px] font-bold text-accent">
+                                {String(i + 1).padStart(2, "0")}
+                              </span>
+                            </div>
+                            <p className="pt-1 text-sm leading-relaxed text-fg/90 font-medium">{step}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── ANALOGY ── */}
+                  {result.analogy && (
+                    <div className="border border-accent/40 border-b-0 bg-black/30 p-7">
+                      <p className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.3em] text-muted/50 uppercase mb-4">
+                        THE STRUCTURAL ANALOGY
+                      </p>
+                      <p className="text-sm leading-relaxed text-fg/80 italic">{result.analogy}</p>
+                    </div>
+                  )}
+
+                  {/* ── META ── */}
+                  <div className="border border-accent/40 p-5">
+                    <Meta meta={result.meta} />
+                  </div>
+                </motion.section>
               )}
             </AnimatePresence>
           </motion.div>

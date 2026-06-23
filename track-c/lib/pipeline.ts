@@ -30,6 +30,8 @@ export interface DiagnosisResult {
   xPrediction?: string;
   yKill?: string;
   analogy?: string;
+  missedSignals?: string[];
+  nextSteps?: string[];
   // audit
   meta: {
     model: string;
@@ -106,6 +108,8 @@ export async function runPipeline(intake: Intake): Promise<DiagnosisResult> {
     xPrediction: map.x_prediction,
     yKill: map.y_kill,
     analogy: map.analogy,
+    missedSignals: map.missed_signals,
+    nextSteps: map.next_steps,
     meta,
     rawModelOutput: map,
   };
