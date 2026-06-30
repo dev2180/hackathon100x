@@ -1,18 +1,12 @@
-import { auth } from "@clerk/nextjs/server";
 import { IntakeSchema } from "@/lib/schemas";
 import { runPipeline } from "@/lib/pipeline";
 import { storeDiagnosis, getRecentDiagnosisCount } from "@/lib/store";
 
-// Uses the Grok SDK + Supabase — must run on Node.
+// Uses the Grok SDK + Supabase (Phase 2) — must run on Node.
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  const { userId, getToken } = await auth();
-  if (!userId) {
-    return Response.json({ error: "Unauthorized." }, { status: 401 });
-  }
-  const token = await getToken();
-  const activeUserId = userId;
+  const activeUserId = "local";
 
   let body: unknown;
   try {
@@ -32,7 +26,7 @@ export async function POST(request: Request) {
 
   // Rate Limiting Guard — max 10 runs per 24 hours per user
   try {
-    const recentCount = await getRecentDiagnosisCount(activeUserId, token);
+    const recentCount = await getRecentDiagnosisCount(activeUserId);
     if (recentCount >= 10) {
       return Response.json(
         { error: "Rate limit exceeded. You can only run up to 10 diagnoses per 24 hours." },
@@ -47,7 +41,7 @@ export async function POST(request: Request) {
   try {
     const result = await runPipeline(parsed.data);
     // STORE + LOG (step 6) — persist every run, including refuse/abstain.
-    await storeDiagnosis(parsed.data, result, activeUserId, token);
+    await storeDiagnosis(parsed.data, result, activeUserId);
     return Response.json(result);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Pipeline error.";

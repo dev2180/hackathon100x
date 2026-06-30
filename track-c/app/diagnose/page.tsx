@@ -5,8 +5,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { UserButton } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import { motion, AnimatePresence } from "framer-motion";
 import { DiagnosisGraph } from "@/components/DiagnosisGraph";
 import { ScrambleText } from "@/components/ScrambleText";
@@ -200,10 +198,7 @@ export default function DiagnosePage() {
             TRACK&nbsp;C · DIAGNOSTIC
           </p>
           <div className="flex items-center gap-3">
-            <UserButton
-              appearance={{ elements: { avatarBox: "h-7 w-7 rounded-none" } }}
-              userProfileProps={{ appearance: { baseTheme: dark } }}
-            />
+            <span className="font-[family-name:var(--font-mono)] text-[9px] tracking-widest text-muted/40 uppercase">GUEST</span>
           </div>
         </div>
 
