@@ -1,6 +1,9 @@
-import { redirect } from "next/navigation";
+import { SignIn } from "@clerk/nextjs";
 
-// Auth is Phase 2 — redirect to the diagnose page for now.
 export default function SignInPage() {
-  redirect("/diagnose");
+  return (
+    <main className="flex min-h-screen items-center justify-center px-5 py-32">
+      <SignIn signUpUrl="/sign-up" forceRedirectUrl="/diagnose" />
+    </main>
+  );
 }

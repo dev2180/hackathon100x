@@ -5,6 +5,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -119,13 +120,23 @@ export default function LandingPage() {
           <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.4em] text-muted">
             TRACK&nbsp;C
           </span>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="font-[family-name:var(--font-mono)] text-[10px] tracking-wider text-muted hover:text-accent transition-colors uppercase font-bold">
+                  SIGN IN
+                </button>
+              </SignInButton>
+            </SignedOut>
             <Link
               href="/diagnose"
               className="inline-block border border-accent bg-[#5fa324]/10 hover:bg-[#5fa324] hover:text-black px-4 py-1.5 font-[family-name:var(--font-mono)] text-[10px] tracking-wider text-accent transition-all duration-150 active:scale-95 uppercase font-bold rounded-none"
             >
               RUN DIAGNOSIS →
             </Link>
+            <SignedIn>
+              <UserButton appearance={{ elements: { avatarBox: "h-7 w-7 rounded-none" } }} />
+            </SignedIn>
           </div>
         </nav>
       </div>

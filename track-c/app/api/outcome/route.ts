@@ -1,3 +1,4 @@
+import { auth } from "@clerk/nextjs/server";
 import { storeOutcome } from "@/lib/store";
 import { z } from "zod";
 
@@ -10,6 +11,12 @@ const OutcomeSchema = z.object({
 });
 
 export async function POST(request: Request) {
+  const { userId, getToken } = await auth();
+  if (!userId) {
+    return Response.json({ error: "Unauthorized." }, { status: 401 });
+  }
+  const token = await getToken();
+
   let body: unknown;
   try {
     body = await request.json();
@@ -30,6 +37,7 @@ export async function POST(request: Request) {
       parsed.data.diagnosisId,
       parsed.data.didWhat,
       parsed.data.matchedPrediction,
+      token,
     );
     return Response.json({ success: true, outcome });
   } catch (err) {

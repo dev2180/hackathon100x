@@ -63,8 +63,10 @@ export interface OutcomeRow {
   created_at: string;
 }
 
-// Phase 2: Supabase client (unused in Phase 1)
-export async function getSupabaseClient() {
+// Builds a Supabase client whose every request carries the caller's Clerk
+// session token. Supabase validates the token via the Clerk third-party-auth
+// integration, and RLS keys off `auth.jwt()->>'sub'` (the Clerk user id).
+export function getSupabaseClient(token: string) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -72,15 +74,18 @@ export async function getSupabaseClient() {
     throw new Error("Supabase URL or Anon Key is not set in environment variables.");
   }
 
-  return createClient(supabaseUrl, supabaseKey);
+  return createClient(supabaseUrl, supabaseKey, {
+    accessToken: async () => token,
+  });
 }
 
 export async function storeDiagnosis(
   intake: Intake,
   result: DiagnosisResult,
   userId: string,
+  token?: string | null,
 ): Promise<DiagnosisRow> {
-  if (userId === "local") {
+  if (userId === "local" || !token) {
     const localList = readLocalDiagnoses();
     const newRow: DiagnosisRow = {
       id: crypto.randomUUID(),
@@ -98,12 +103,13 @@ export async function storeDiagnosis(
       created_at: new Date().toISOString(),
       outcome: [],
     };
+    newRow.user_id = userId;
     localList.push(newRow);
     writeLocalDiagnoses(localList);
     return newRow;
   }
 
-  const supabase = await getSupabaseClient();
+  const supabase = getSupabaseClient(token);
 
   // Ensure user profile exists (RLS allows inserting own profile)
   await supabase.from("profiles").upsert({ id: userId });
@@ -133,15 +139,18 @@ export async function storeDiagnosis(
   return data as DiagnosisRow;
 }
 
-export async function fetchDiagnoses(userId?: string): Promise<DiagnosisRow[]> {
+export async function fetchDiagnoses(userId?: string, token?: string | null): Promise<DiagnosisRow[]> {
   const activeUserId = userId || "local";
-  if (activeUserId === "local") {
-    return readLocalDiagnoses().sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
+  if (activeUserId === "local" || !token) {
+    return readLocalDiagnoses()
+      .filter((d) => d.user_id === activeUserId)
+      .sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
   }
 
-  const supabase = await getSupabaseClient();
+  const supabase = getSupabaseClient(token);
+  // RLS scopes the result set to the caller — no explicit user_id filter needed.
   const { data, error } = await supabase
     .from("diagnosis")
     .select("*, outcome(*)")
@@ -159,10 +168,14 @@ export async function storeOutcome(
   diagnosisId: string,
   didWhat: string,
   matchedPrediction: boolean,
+  token?: string | null,
 ): Promise<OutcomeRow> {
   const localList = readLocalDiagnoses();
   const localDiag = localList.find((d) => d.id === diagnosisId);
-  if (localDiag) {
+  if (localDiag || !token) {
+    if (!localDiag) {
+      throw new Error("Diagnosis not found.");
+    }
     const newOutcome: OutcomeRow = {
       id: crypto.randomUUID(),
       diagnosis_id: diagnosisId,
@@ -178,7 +191,7 @@ export async function storeOutcome(
     return newOutcome;
   }
 
-  const supabase = await getSupabaseClient();
+  const supabase = getSupabaseClient(token);
   const { data, error } = await supabase
     .from("outcome")
     .insert({
@@ -196,17 +209,17 @@ export async function storeOutcome(
   return data as OutcomeRow;
 }
 
-export async function getRecentDiagnosisCount(userId?: string): Promise<number> {
+export async function getRecentDiagnosisCount(userId?: string, token?: string | null): Promise<number> {
   const activeUserId = userId || "local";
-  if (activeUserId === "local") {
+  if (activeUserId === "local" || !token) {
     const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
     const localList = readLocalDiagnoses();
     return localList.filter(
-      (d) => new Date(d.created_at).getTime() > oneDayAgo
+      (d) => d.user_id === activeUserId && new Date(d.created_at).getTime() > oneDayAgo
     ).length;
   }
 
-  const supabase = await getSupabaseClient();
+  const supabase = getSupabaseClient(token);
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
   
   const { count, error } = await supabase
